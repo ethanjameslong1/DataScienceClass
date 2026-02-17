@@ -1,0 +1,6 @@
+Alpha Vantage Stock API (Key Already Have)
+Todoist API (Key Already Have)
+Spotify API (Key requested and received)
+NASA API (Key requested and received)
+Rickandmortyapi (No key required)
+OMBD API (Key requested and received)
