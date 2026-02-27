@@ -1,0 +1,14 @@
+h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    color: red;
+    font-weight: bold;
+}
+
+h1 {
+    font-family: 'Georgia', serif;
+    font-size: 48px;
+    color: green;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}

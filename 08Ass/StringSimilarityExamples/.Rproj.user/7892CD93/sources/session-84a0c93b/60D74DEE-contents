@@ -1,0 +1,110 @@
+library(stringr)
+library(hash)
+
+#Damerau Levenshtein Distance
+str1 = "hello"
+str2 = "hallo"
+
+#convert to same case
+str1 = tolower(str1)
+str2 = tolower(str2)
+
+if (str1 == str2) {
+  Dist <- 1
+} else {
+  len1 = str_length(str1)
+  len2 = str_length(str2)
+  
+  # Maximum distance up to which matching
+  # is allowed
+  max_dist = floor(max(len1, len2) / 2) - 1
+  ##message("max dist=",max_dist)
+  
+  # Count of matches
+  match = 0
+  
+  # Hash for matches
+  hash_s1 = hash(1:len1,0)
+  hash_s2 = hash(1:len2,0 )
+  
+  ##print(hash_s1)
+  ##print(hash_s2)
+  
+  # Traverse through the first
+  for (i in 1:len1) {
+    # Check if there is any matches
+    for (j in max(1, i - max_dist):min(len2, i + max_dist + 1))
+    {
+     if (str_sub(str1,i,i) == str_sub(str2,j,j) && hash_s2[[as.character(j)]] == 0)
+      {
+        hash_s1[as.character(i)] = 1
+        hash_s2[as.character(j)] = 1
+        match = match + 1
+        break
+      }
+    }
+    #print(hash_s1)
+    #print(hash_s2)
+    
+  }
+  
+  # If there is no match
+  if (match == 0)
+    Dist <- 0.0
+  else
+  {
+    # Number of transpositions
+    t <- 0
+    point <- 1
+    
+    # Count number of occurrences
+    # where two characters match but
+    # there is a third matched character
+    # in between the indices
+    for (i in 1:len1)
+    {
+      if (hash_s1[[as.character(i)]])
+      {
+        # Find the next matched character
+        # in second
+        while (hash_s2[[as.character(point)]] == 0)
+        {
+          point = point + 1
+        }
+        
+        if (str_sub(str1,i,i) != str_sub(str2,point,point))
+        {
+          t = t + 1
+        }
+        
+        point = point + 1
+      }
+    }
+    t = t / 2
+  
+  # Return the Jaro Similarity
+  Dist <- (match / len1 + match / len2 + (match - t) / match) / 3.0
+  }
+}
+
+
+
+# If the jaro Similarity is above a threshold 
+if (Dist > 0.7) 
+  # Find the length of common prefix 
+  prefix = 0; 
+
+for (i in 1:min(len1, len2))
+{
+  # If the characters match 
+  if (str_sub(str1,i,i) == str_sub(str2,i,i)) 
+      prefix = prefix + 1 
+}
+# Maximum of 4 characters are allowed in prefix 
+prefix = min(4, prefix); 
+
+# Calculate jaro winkler Similarity 
+Dist = Dist + 0.1 * prefix * (1 - Dist); 
+
+message("Jaro Winkler Similarity:", Dist)
+
